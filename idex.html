@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>涛哥餐饮服务 · 涛味鲜汤料</title>
+    <!-- Font Awesome 图标库 (用于社交媒体图标) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #faf7f2;
+            color: #2e241f;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部 - 图文并排，照片改为4:3矩形 */
+        .header {
+            padding: 30px 0 10px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        .header-text h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #3f2c1b;
+        }
+
+        .header-text h1 span {
+            color: #b85c3a;
+            font-weight: 700;
+        }
+
+        .header-text p {
+            font-size: 1.2rem;
+            color: #5f4e40;
+            margin-top: 8px;
+            border-bottom: 3px solid #e1cfbc;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        /* 照片调整为4:3矩形 */
+        .header-photo {
+            width: 300px;                /* 固定宽度 */
+            aspect-ratio: 4 / 3;         /* 4:3比例 */
+            border-radius: 16px;          /* 柔和圆角（非圆形） */
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+            background-color: #d9c5b3;    /* 加载前的占位色 */
+        }
+
+        .header-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 小屏幕适配：照片宽度自适应 */
+        @media (max-width: 600px) {
+            .header-content {
+                justify-content: center;
+                text-align: center;
+            }
+            .header-photo {
+                width: 80%;               /* 手机下宽度80% */
+                margin-top: 15px;
+            }
+            .header-text h1 {
+                font-size: 2.5rem;
+            }
+        }   
+
+        /* 主要区块通用 */
+        .section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            padding-left: 10px;
+            border-left: 10px solid #b85c3a;
+            font-weight: 500;
+            color: #2e241f;
+        }
+
+        /* 服务经历卡片区 - 每张卡片可点击跳转详情 */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        /* 卡片链接样式：去除下划线，颜色继承 */
+        .service-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .service-card-link:hover {
+            transform: translateY(-6px);
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-img {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 每张卡配不同的配图 (Unsplash 餐饮相关) */
+        .img1 { background-image: url(联通.jpg); }
+        .img2 { background-image: url(公安局.jpg); }
+        .img3 { background-image: url(广电.jpg); }
+        .img4 { background-image: url(gjj.jpg); }
+
+        .card-content {
+            padding: 20px 16px 24px;
+            flex: 1;
+        }
+
+        .card-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #3f2c1b;
+        }
+
+        .card-content p {
+            color: #5a4a3e;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-content i {
+            color: #b85c3a;
+            width: 20px;
+        }
+
+        /* 提示详情的小箭头 */
+        .detail-hint {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #b85c3a;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-top: 1px dashed #e0cfbf;
+            padding-top: 12px;
+        }
+
+        /* 涛味鲜产品区 */
+        .product-show {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            background: white;
+            border-radius: 48px;
+            padding: 40px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.04);
+            align-items: center;
+        }
+
+        .product-image {
+            flex: 1.2;
+            min-width: 280px;
+            height: 340px;
+            background-image: url(涛味鲜.jpg);
+            background-size: cover;
+            background-position: center;
+            border-radius: 40px;
+            box-shadow: 0 10px 25px rgba(181, 93, 58, 0.15);
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .product-info h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #3f2c1b;
+            line-height: 1.1;
+        }
+
+        .product-info h2 small {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #b85c3a;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .product-desc {
+            margin: 25px 0;
+            font-size: 1.15rem;
+            color: #3f332b;
+            border-left: 5px solid #b85c3a;
+            padding-left: 20px;
+            background: #fef7f0;
+            border-radius: 0 20px 20px 0;
+            line-height: 1.6;
+        }
+
+        .product-desc i {
+            color: #b85c3a;
+            margin-right: 8px;
+        }
+
+        /* 联系区块 */
+        .contact-section {
+            background: linear-gradient(145deg, #efe3d6, #f7ede3);
+            border-radius: 70px 70px 30px 30px;
+            padding: 50px 40px;
+            margin: 70px 0 50px;
+            box-shadow: inset 0 2px 8px rgba(255,250,240,0.8), 0 15px 25px rgba(0,0,0,0.05);
+        }
+
+        .contact-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 35px;
+            color: #2e241f;
+            text-align: center;
+        }
+
+        .contact-icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .contact-item {
+            background: white;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 20px rgba(169, 98, 51, 0.15);
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #2e241f;
+            border: 3px solid transparent;
+        }
+
+        .contact-item:hover {
+            border-color: #b85c3a;
+            transform: scale(1.03);
+            background: #fffbf5;
+        }
+
+        .contact-item i {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-item .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .contact-item .small-note {
+            font-size: 0.85rem;
+            color: #b85c3a;
+            margin-top: 4px;
+        }
+
+        .phone-item {
+            background: #b85c3a;
+            color: white;
+        }
+        .phone-item i, .phone-item .label, .phone-item .small-note {
+            color: white;
+        }
+        .phone-item:hover {
+            background: #a04e2f;
+            border-color: #3f2c1b;
+        }
+
+        /* 抖音/快手/视频号图标修正 */
+        .fa-douyin:before, .fa-tiktok:before { content: "\f0e7"; }
+        .fa-kuaishou:before { content: "\f0e7"; }
+        .fa-video:before { content: "\f03d"; }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 0 40px;
+            color: #6d5c4e;
+            border-top: 2px dashed #dacbbc;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 700px) {
+            .product-show { flex-direction: column; padding: 25px; }
+            .product-image { width: 100%; height: 250px; }
+            .contact-item { width: 130px; height: 130px; }
+            .contact-item i { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- 头部：标题 + 个人照片（请替换照片路径） -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1>涛哥<span>餐饮服务工作室</span></h1>
+                <p>· 上门私厨抻面 · 涛味鲜汤料 ·</p>
+            </div>
+            <div class="header-photo">
+                <!-- 请将 src="你的照片路径.jpg" 替换为您的真实照片路径 -->
+                <img src="涛哥.jpg" alt="涛哥照片 onclick="openModal()" style="cursor: pointer;">
+            </div>
+        </div>
+    </div>
+
+    <!-- 服务经历展示：企业/单位食堂上门抻面（卡片可点击查看详情） -->
+    <div class="section">
+        <h2 class="section-title">🍜 现场抻面 · 服务足迹</h2>
+        <div class="service-grid">
+            <!-- 卡片1：包裹在可点击的链接内，href替换为真实详情页URL -->
+            <a href="https://www.kuaishou.com/f/X-91Zg5IeQiZek35">
+                <div class="service-card">
+                    <div class="card-img img1"></div>
+                    <div class="card-content">
+                        <h3>沈阳市联通公司</h3>
+                        
+                        <div class="detail-hint">
+                            <i class="fas fa-arrow-right"></i> 点击查看详细服务记录
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <!-- 卡片2 -->
+            <a href="https://www.kuaishou.com/f/X3vFAUbWT4gBtJT">
+                <div class="service-card">
+                    <div class="card-img img2"></div>
+                    <div class="card-content">
+                        <h3>沈阳市公安局</h3>
+                        
+                        <div class="detail-hint">
+                            <i class="fas fa-arrow-right"></i> 点击查看详细服务记录
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <!-- 卡片3 -->
+            <a href="https://www.kuaishou.com/f/X-40M7IS6u39U1VI">
+                <div class="service-card">
+                    <div class="card-img img3"></div>
+                    <div class="card-content">
+                        <h3>中国广电</h3>
+                        
+                        <div class="detail-hint">
+                            <i class="fas fa-arrow-right"></i> 点击查看详细服务记录
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <!-- 卡片4 -->
+            <a href="https://www.kuaishou.com/f/XalNCIIXuqGvDp1">
+                <div class="service-card">
+                    <div class="card-img img4"></div>
+                    <div class="card-content">
+                        <h3>沈阳市住房公积金管理中心</h3>
+                       
+                        <div class="detail-hint">
+                            <i class="fas fa-arrow-right"></i> 点击查看详细服务记录
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <p style="text-align: right; margin-top: 16px; color:#a55a3a; font-style: italic;">—— 还有三十余家企事业单位，欢迎预约 ——</p>
+    </div>
+
+    <!-- 涛味鲜汤料产品展示 -->
+    <div class="section">
+        <h2 class="section-title">🧂 自有品牌 · 涛味鲜汤料</h2>
+        <div class="product-show">
+            <div class="product-image" title="涛味鲜汤料实拍图"></div>
+            <div class="product-info">
+                <h2>涛味鲜<br><small>一勺入魂 · 百搭提鲜</small></h2>
+                <div class="product-desc">
+                    <i class="fas fa-check-circle"></i> 涛味鲜汤料，天然无添加，一碗好面，汤定乾坤<br>
+                    <i class="fas fa-check-circle"></i>老汤/鸡汤/牛肉面，全部搞定，纯正本味更安心<br>
+                    <i class="fas fa-check-circle"></i> 秘制配比，鲜醇入味，食堂家用都好用<br>
+                    <i class="fas fa-check-circle"></i> 真材实料无添加，面馆食堂家庭优选
+                </div>
+                <p style="font-size: 1.2rem; margin-top: 15px;">
+                    <i class="fas fa-phone-alt" style="color:#b85c3a;"></i> 
+                    批量订购致电：<strong>130-3241-0816</strong> (同微信)
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- 风采展示：视频专区 -->
+<div class="section">
+    <h2 class="section-title">🎬 涛哥风采 · 现场实拍</h2>
+    <div class="video-container" style="max-width: 800px; margin: 0 auto; background: #f0e5d9; border-radius: 30px; padding: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1);">
+        <video 
+            controls 
+            width="100%" 
+            poster="fengcai-poster.jpg"  <!-- 封面图片（可选） -->
+            style="border-radius: 20px; display: block;"
+        
+            <source src="风采展示.mp4" type="video/mp4">
+            您的浏览器不支持视频播放，请升级浏览器或<a href="fengcai.mp4">点击下载</a>观看。
+        </video>
+        <p style="text-align: center; margin-top: 15px; color: #b85c3a;">
+            <i class="fas fa-play-circle"></i> 点击播放，感受抻面现场气氛
+        </p>
+    </div>
+</div>
+
+    <!-- 联系方式：电话直接拨打 + 抖音/快手/视频号跳转 -->
+    <div class="contact-section">
+        <div class="contact-title">📞 马上联系 · 体验真功夫</div>
+        <div class="contact-icons">
+            <!-- 电话拨打 (可点击直接拨号) -->
+            <a href="tel:13888881234" class="contact-item phone-item">
+                <i class="fas fa-phone-alt"></i>
+                <span class="label">电话直拨</span>
+                <span class="small-note">涛哥</span>
+            </a>
+            <!-- 抖音 -->
+            <a href="https://v.douyin.com/jNOwkzHJrjA/ 8@0.com :1pm" target="_blank" class="contact-item" title="打开抖音看抻面现场">
+                <i class="fab fa-tiktok"></i>
+                <span class="label">抖音</span>
+                <span class="small-note">@上门私厨抻面涛哥</span>
+            </a>
+            <!-- 快手 -->
+            <a href="https://www.kuaishou.com/profile/3xtrdi9h7ru8g8e?source=NewReco" target="_blank" class="contact-item" title="快手每日更新">
+                <i class="fas fa-bolt"></i>
+                <span class="label">快手</span>
+                <span class="small-note">@上门私厨拉面</span>
+            </a>
+            
+            <!-- 微信：点击查看二维码 -->
+         <a href="微信.jpg" target="_blank" class="contact-item" title="点击查看微信二维码，长按添加">
+          <i class="fab fa-weixin"></i>   <!-- 微信图标 -->
+         <span class="label">微信</span>
+         <span class="small-note">扫码添加涛哥微信</span>
+        </a>    
+        </div>
+        <p style="text-align: center; margin-top: 30px; font-size: 1rem; background: rgba(255,255,240,0.7); padding: 8px 15px; border-radius: 60px;">
+            <i class="fas fa-hand-pointer"></i> 点击图标直接跳转官方主页 · 随时了解抻面动态 & 汤料优惠
+        </p>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>© 2025 涛哥餐饮服务工作室 · 用心做好每一碗面 · 汤料订购 / 上门抻面 欢迎垂询</p>
+        <p style="font-size: 0.9rem; margin-top: 5px;">⭐ 图片均为示意，实际产品与服务更精彩 ⭐</p>
+    </div>
+</div>
+
+
+</body>
+</html>
